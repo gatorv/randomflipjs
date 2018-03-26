@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="x-ua-compatible" content="ie=edge">
+        <title>Random Number Generator Example</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+        <link rel="stylesheet" href="css/normalize.css">
+        <style type="text/css">
+            html {
+                font-family: 'Roboto', sans-serif;
+                font-size: 100%;
+            }
+
+            body {
+                background-color: navy;
+                color: white;
+                margin-top: 15px;
+            }
+
+            button {
+                text-transform: uppercase;
+                padding: 5px;
+            }
+
+            button:disabled {
+                color: black;
+            }
+
+            #inputDiv {
+                margin: 0 auto;
+                width: 300px;
+                text-align: center;
+            }
+            #resultDiv {
+                margin: 0 auto;
+                width: 300px;
+                text-align: center;
+                font-size: 10em;
+            }
+            #controlsDiv {
+                margin: 0 auto;
+                width: 200px;
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="inputDiv">Max: <input type="number" name="max-value" id="max-value"></div>
+        <div id="controlsDiv"><button id="generate">Generate</button></div>
+        <div id="resultDiv"></div>
+
+        <script type="text/javascript">
+        (function() {
+            var maxValueInput,
+                generateButton,
+                resultDiv;
+
+            function init() {
+                maxValueInput = document.getElementById('max-value');
+                generateButton = document.getElementById('generate');
+                resultDiv = document.getElementById('resultDiv');
+
+                generateButton.addEventListener('click', function() {
+                    var num = parseInt(maxValueInput.value);
+
+                    try {
+                        var random = randomNumber(num);
+                        resultDiv.innerHTML = random;
+                    } catch (error) {
+                        alert(error);
+                    }
+                });
+            }
+
+            function flip() {
+                return Math.random() >=0.5;
+            }
+
+            // Source: https://math.stackexchange.com/a/133388
+            function randomNumber(maxValue) {
+                if (maxValue > 1000000) {
+                    throw new Error('Max value is 1,000,000');
+                }
+
+                var binSize = 0,
+                    value = maxValue,
+                    randomSize = 0,
+                    randomBin = '',
+                    randomValue = 0;
+
+                while (value > 0) {
+                    binSize++;
+                    value = value >> 1;
+                }
+
+                do {
+                    randomBin = '';
+                    randomSize = 0;
+                    while (randomSize <= binSize) {
+                        randomBin += flip() ? '1' : '0';
+                        randomSize = randomBin.length;
+                    }
+
+                    randomValue = parseInt(randomBin, 2);
+                } while (randomValue >= maxValue);
+
+                return randomValue;
+            }
+
+            init();
+        })();
+        </script>
+    </body>
+</html>
